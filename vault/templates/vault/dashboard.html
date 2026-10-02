@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dashboard - KeyForge</title>
+  </head>
+  <body>
+    <h2>Welcome, {{ user.username }}</h2>
+    <p>Your vaults will show up here.</p>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit">Log out</button>
+    </form>
+  </body>
+</html>
