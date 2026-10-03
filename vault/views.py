@@ -46,3 +46,40 @@ def dashboard_view(request):
     keys = APIKeyEntry.objects.filter(vault__owner=request.user)
     return render(request, 'vault/dashboard.html', {'keys' : keys})
 
+@login_required
+def add_key(request):
+    if request.method == 'POST':
+        vault, _ = Vault.objects.get_or_create(name='Default', owner=request.user)
+        entry = APIKeyEntry(
+            vault=vault,
+            name=request.POST.get('name'),
+            provider=request.POST.get('provider', ''),
+        )
+        entry.set_value(request.POST.get('value'))
+        entry.save()
+        messages.success(request, 'Key added successfully.')
+        return redirect(request, 'dashboard')
+    return render(request, 'vault/add.html')
+
+@login_required
+def update_key(request, key_id):
+    entry = get_object_or_404(APIKeyEntry, id=key_id, vault__owner=request.user)
+    if request.method == 'POST':
+        entry.name = request.POST.get('username', entry.name)
+        new_value = request.POST.get('password')
+        if new_value:
+            entry.set_value(new_value)
+        entry.save()
+        return redirect('dashboard')
+    return render(request, 'vault/update.html', {'cred':entry})
+
+@login_required
+def delete_key(request, key_id):
+    entry = get_object_or_404(APIKeyEntry, id=key_id, vault__owner=request.user)
+    if request.method == 'POST':
+        entry.delete()
+    return redirect('dashboard')
+
+@login_required
+def account(request):
+    return render(request, 'vault/account.html')
