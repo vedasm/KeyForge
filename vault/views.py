@@ -14,7 +14,7 @@ def register(request):
         
         if password != confirmPassword:
             messages.error(request, "Password doesn't match.")
-        elif User.objects.filter(username=username).exists:
+        elif User.objects.filter(username=username).exists():
             messages.error(request, "Username already taken.")
         else:
             user = User.objects.create_user(username=username, email=email,password=password)
@@ -33,7 +33,7 @@ def login_view(request):
             login(request, user)
             return redirect('dashboard')
         else:
-            messages.error(request, "Invalide username or password.")
+            messages.error(request, "Invalid username or password.")
     return render(request, 'vault/login.html')
 
 def logout_view(request):
@@ -58,7 +58,7 @@ def add_key(request):
         entry.set_value(request.POST.get('value'))
         entry.save()
         messages.success(request, 'Key added successfully.')
-        return redirect(request, 'dashboard')
+        return redirect('dashboard')
     return render(request, 'vault/add.html')
 
 @login_required
