@@ -127,7 +127,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 if not DEBUG:
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    CSRF_TRUSTED_ORIGINS = env.list('DJANGO_CSRF_TRUSTED_ORIGINS', default=[])
+    CSRF_TRUSTED_ORIGINS = env.list(
+        'DJANGO_CSRF_TRUSTED_ORIGINS',
+        default=(
+            [f'https://{RENDER_EXTERNAL_HOSTNAME}']
+            if RENDER_EXTERNAL_HOSTNAME
+            else []
+        ),
+    )
 
 
 # Email
@@ -135,7 +142,14 @@ if not DEBUG:
 
 MAILERS = {
     'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+        'BACKEND': env(
+            'EMAIL_BACKEND',
+            default=(
+                'django.core.mail.backends.smtp.EmailBackend'
+                if not DEBUG
+                else 'django.core.mail.backends.console.EmailBackend'
+            ),
+        ),
     },
 }
 
