@@ -65,11 +65,13 @@ def add_key(request):
 def update_key(request, key_id):
     entry = get_object_or_404(APIKeyEntry, id=key_id, vault__owner=request.user)
     if request.method == 'POST':
-        entry.name = request.POST.get('username', entry.name)
-        new_value = request.POST.get('password')
+        entry.name = request.POST.get('name', entry.name)
+        entry.provider = request.POST.get('provider', entry.provider)
+        new_value = request.POST.get('value')
         if new_value:
             entry.set_value(new_value)
         entry.save()
+        messages.success(request, 'Key updated successfully.')
         return redirect('dashboard')
     return render(request, 'vault/update.html', {'cred':entry})
 
