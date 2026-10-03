@@ -1,14 +1,65 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Dashboard - KeyForge</title>
-  </head>
-  <body>
-    <h2>Welcome, {{ user.username }}</h2>
-    <p>Your vaults will show up here.</p>
-    <form method="POST" action="{% url 'logout' %}">
-      {% csrf_token %}
-      <button type="submit">Log out</button>
-    </form>
-  </body>
-</html>
+{% extends "vault/base.html" %}
+{% block title %}Vault - KeyForge{% endblock title %}
+
+{% block main %}
+<div class="container" style="max-width: 900px">
+  <h2>Welcome, {{ user.username }}</h2>
+  <h3>Your Saved Keys</h3>
+
+  {% if keys %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Provider</th>
+          <th>Key</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key in keys %}
+        <tr>
+          <td>{{ key.name }}</td>
+          <td>{{ key.provider }}</td>
+          <td>
+            <span class="key-masked" data-id="{{ key.id }}">********</span>
+            <span class="key-revealed" data-id="{{ key.id }}" style="display:none;">{{ key.get_value}}</span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button type="button" class="btn btn-primary btn-sm view-toggle" data-id="{{ key.id }}">View</button>
+              <a href="{% url 'update_key' key.id %}" class="btn btn-primary btn-sm">Edit</a>
+              <form method="POST" action="{% url 'delete_key' key.id %}" style="display:inline;" onsubmit="return confirm('Delete this key?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p>No Keys saved yet.</p>
+    {% endif %}
+</div>
+
+<script>
+  document.querySelectorAll('.view-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = this.getAttribute('data-id');
+      var masked = document.querySelector('.key-masked[data-id="' + id + '"]');
+      var revealed = document.querySelector('.key-revealed[data-id="'+ id +'"]');
+      if (masked.style.display === 'none') {
+        masked.style.display = 'inline';
+        revealed.style.display = 'none';
+        this.textContent = 'View';
+      } else {
+        masked.style.display = 'none';
+        revealed.style.display = 'inline';
+        this.textContent = 'Hide';
+      }
+    });
+  });
+</script>
+{% endblock main %}

@@ -3,8 +3,12 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    path('register/', views.register, name='register'),
-    path('login/', auth_views.LoginView.as_view(template_name='vault/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('register/', views.register, name="register"),
+    path('login/', views.login_view, name="login"),
+    path('logout/', views.logout_view, name="logout"),
+    path('', views.dashboard_view, name="dashboard"),
+    path('add/', views.add_key, name="add_key"),
+    path('update/<int:key_id>/', views.update_key, name="update_key"),
+    path('delete/<int:key_id>/', views.delete_key, name="delete_key"),
+    path('account/', views.account, name="account"),
 ]

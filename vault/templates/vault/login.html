@@ -1,15 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login - KeyForge</title>
-</head>
-<body>
-    <h2>Log in to KeyForge</h2>
+{% extends "vault/base.html" %}
+{% block title %}Login In - KeyForge{% endblock %}
+
+{% block main %}
+<div class="container" style="max-width: 240px;">
+    <h2>Welcome Back</h2>
+
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Log in</button>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control" id="username" name="username" placeholder="Username" type="text" required>
+        </div>
+        <div class="mb-3">
+            <input class="form-control" id="password" name="password" placeholder="Password" type="password" required>
+        </div>
+        <button class="btn btn-primary w-100" type="submit">Login</button>
     </form>
-    <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
-</body>
-</html>
+    <p class="mt-3">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+</div>
+{% endblock %}
