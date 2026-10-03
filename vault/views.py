@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required 
 from django.contrib import messages
@@ -84,4 +84,29 @@ def delete_key(request, key_id):
 
 @login_required
 def account(request):
+    if request.method == 'POST':
+        if 'change_email' in request.POST:
+            new_email = request.POST.get('new_email')
+            if new_email:
+                request.user.email = new_email
+                request.user.save()
+                messages.success(request, 'Email Updated')
+        return redirect('account')
+    elif 'change_password' in request.POST:
+        prev_password = request.POST.get('prev_password')
+        new_password = request.POST.get('new_password')
+        if not request.user.check_password(prev_password):
+            messages.error(request, 'Current password is incorrect.')
+        else:
+            request.user.set_password(new_password)
+            request.user.save()
+            update_session_auth_hash(request, request.user)
+            messages.success(request, 'Password Updated')
+            return redirect('account')
+    elif 'delete_account' in request.POST:
+        user = request.user
+        logout(request)
+        user.delete()
+        messages.success(request, 'Account Deleted.')
+        return redirect('login')
     return render(request, 'vault/account.html')
