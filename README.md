@@ -1,48 +1,80 @@
 # KeyForge
 
-KeyForge is a Django application for securely storing API keys.
+KeyForge is a secure personal vault for API keys, token & secrets. Built with Django, it allows you create private dashboard where you can store your credentials in an encrypted format, update them whenever needed, & keep your project environment organised without hardcoding secrets into your code.
 
-## Local development
+## What is KeyForge?
 
-1. Create and activate a Python virtual environment.
+Most of the developers keep API keys in `.env` files, config files, or scattered notes. That works for a small project, but it gets messy as the project grows. So, KeyForge gives you a single place to manage credentials with a clean interface and strong encryption at rest.
+
+Easch User has their own vault, and every saved secret is encrypted before it is stored in the database using Python's `cryptography.fernet` library.
+
+## How it works?
+
+1. Create an account and login.
+2. Open your personal vault dashboard.
+3. Add a key with a name, provider and secret value.
+4. KeyForge encrypts the value before saving it.
+5. Update, delete, or manage keys from the same vault/dashboard.
+
+## Features
+
+- User authentication and account management
+- Per user vaults with separate data
+- Encrypted API key storage using Fernet
+- Add, update and delete credentials
+- Password change and email update flows
+- Ready for local SQLite development and PostgreSQL in production
+- Render deployment configuration includede
+
+## Project Structue
+
+```text
+keyforge/               # Django project's settings and config
+vault/                  # app's logic, views, models, templates
+manage.py               # project's entry point
+requirements.txt        # Python Libraries
+render.yaml             # Render deployment config
+```
+
+## Local Development
+
+1. Create and activate a virtual env:
+
+    ```bash
+    python -m venv env
+    .\env\Scripts\activate
+    ```
+
 2. Install dependencies:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-3. Set the required environment variables:
+3. Setup environment variables in a `.env` file:
 
-   ```text
-   DJANGO_SECRET_KEY=replace-with-a-development-secret
-   FERNET_KEY=replace-with-a-generated-fernet-key
-   DJANGO_DEBUG=true
-   ```
+    ```env
+    DJANGO_SECRET_KEY=replace-with-development-secret
+    FERNET_KEY=replace-with-generated-fernet-key
+    DJANGO_DEBUG=True
+    ```
 
-   Generate a Fernet key with:
+    Generate Fernet key with:
 
-   ```bash
-   python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-   ```
+    ```bash
+    python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    ```
+4. Run database migrations and start the app:
 
-4. Apply migrations and start the development server:
+    ```bash
+    python manage.py migrate
+    python manage.py runserver
+    ```
+5. Open the app in your browser at:
 
-   ```bash
-   python manage.py migrate
-   python manage.py runserver
-   ```
+    ```text
+    http://127.0.0.1:8000/
+    ```
 
-## Deploy to Render
+## Deployment on Render
 
-This repository includes [`render.yaml`](./render.yaml), which configures a native
-Python web service. In Render, create a Blueprint from the repository and provide
-the `DATABASE_URL` environment variable for a managed PostgreSQL database.
-
-The Blueprint automatically generates `DJANGO_SECRET_KEY`, collects static files
-during the build, runs migrations when the service starts, and launches Gunicorn.
-Set `FERNET_KEY` to a value generated with the command above before the first
-deploy. Do not regenerate it after deployment: changing it makes existing
-encrypted API keys unreadable.
-
-Render provides `RENDER_EXTERNAL_HOSTNAME` automatically. The Django settings use
-it to allow the deployed host and trust its HTTPS origin for CSRF protection.
