@@ -78,3 +78,26 @@ render.yaml             # Render deployment config
 
 ## Deployment on Render
 
+This repo includes a ['render.yaml](./render.yaml) blueprint for render.
+
+To deploy:
+
+1. Push this repo to GitHub.
+2. In Render, create new Blueprint from the repo.
+3. Set the `DATABASE_URL` environment variable for a managed PostgreSQL instant.
+4. Add `FERNET_KEY` before the first deployment.
+5. Delploy and verify your app is running.
+
+Note: Don't Rotate `FERNET_KEY` after the keys have already been stored. Doing this will make your previously encrypted secrets unreadable.
+
+## Built with
+
+- Python
+- Django
+- PostgreSQL /SQLite
+- Fernert encryption
+- Render deployment support
+
+# License
+
+This project is licensed under the [MIT License](./LICENSE)
