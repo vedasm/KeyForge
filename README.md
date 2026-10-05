@@ -40,7 +40,7 @@ keyforge/               # Django project's settings and config
 vault/                  # app's logic, views, models, templates
 manage.py               # project's entry point
 requirements.txt        # Python Libraries
-railway.toml             # Railway deployment config
+railway.toml            # Railway deployment config
 ```
 
 ## Local Development
@@ -82,25 +82,6 @@ railway.toml             # Railway deployment config
     ```text
     http://127.0.0.1:8000/
     ```
-
-## Deployment on Railway
-
-This repo includes a [`railway.toml`](./railway.toml) configuration for Railway.
-Railway keeps the service running instead of putting it to sleep after inactivity.
-
-To deploy:
-
-1. Push this repo to GitHub.
-2. In Railway, create a new project and deploy this repository.
-3. Add a PostgreSQL service and provide its connection string as `DATABASE_URL`.
-4. Add `DJANGO_SECRET_KEY` and `FERNET_KEY` as Railway variables.
-5. Set `DJANGO_ALLOWED_HOSTS` to the Railway domain (for example,
-   `.up.railway.app`) and `DJANGO_CSRF_TRUSTED_ORIGINS` to the matching
-   HTTPS origin (for example, `https://*.up.railway.app`).
-6. Generate a Railway domain, then deploy and verify the app is running.
-
-Note: Don't rotate `FERNET_KEY` after keys have been stored. Doing so makes
-previously encrypted secrets unreadable.
 
 ## Built with
 
