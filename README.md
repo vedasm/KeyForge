@@ -24,7 +24,7 @@ Easch User has their own vault, and every saved secret is encrypted before it is
 - Add, update and delete credentials
 - Password change and email update flows
 - Ready for local SQLite development and PostgreSQL in production
-- Render deployment configuration includede
+- Railway deployment configuration included
 
 ## Project Structue
 
@@ -33,7 +33,7 @@ keyforge/               # Django project's settings and config
 vault/                  # app's logic, views, models, templates
 manage.py               # project's entry point
 requirements.txt        # Python Libraries
-render.yaml             # Render deployment config
+railway.toml             # Railway deployment config
 ```
 
 ## Local Development
@@ -76,19 +76,24 @@ render.yaml             # Render deployment config
     http://127.0.0.1:8000/
     ```
 
-## Deployment on Render
+## Deployment on Railway
 
-This repo includes a ['render.yaml](./render.yaml) blueprint for render.
+This repo includes a [`railway.toml`](./railway.toml) configuration for Railway.
+Railway keeps the service running instead of putting it to sleep after inactivity.
 
 To deploy:
 
 1. Push this repo to GitHub.
-2. In Render, create new Blueprint from the repo.
-3. Set the `DATABASE_URL` environment variable for a managed PostgreSQL instant.
-4. Add `FERNET_KEY` before the first deployment.
-5. Delploy and verify your app is running.
+2. In Railway, create a new project and deploy this repository.
+3. Add a PostgreSQL service and provide its connection string as `DATABASE_URL`.
+4. Add `DJANGO_SECRET_KEY` and `FERNET_KEY` as Railway variables.
+5. Set `DJANGO_ALLOWED_HOSTS` to the Railway domain (for example,
+   `.up.railway.app`) and `DJANGO_CSRF_TRUSTED_ORIGINS` to the matching
+   HTTPS origin (for example, `https://*.up.railway.app`).
+6. Generate a Railway domain, then deploy and verify the app is running.
 
-Note: Don't Rotate `FERNET_KEY` after the keys have already been stored. Doing this will make your previously encrypted secrets unreadable.
+Note: Don't rotate `FERNET_KEY` after keys have been stored. Doing so makes
+previously encrypted secrets unreadable.
 
 ## Built with
 
@@ -96,7 +101,7 @@ Note: Don't Rotate `FERNET_KEY` after the keys have already been stored. Doing t
 - Django
 - PostgreSQL /SQLite
 - Fernert encryption
-- Render deployment support
+- Railway deployment support
 
 # License
 
