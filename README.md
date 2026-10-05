@@ -1,24 +1,31 @@
 # KeyForge
 
-KeyForge is a secure personal vault for API keys, token & secrets. Built with Django, it allows you create private dashboard where you can store your credentials in an encrypted format, update them whenever needed, & keep your project environment organised without hardcoding secrets into your code.
+KeyForge is a secure personal vault for API keys, token & secrets. Developed by Django you create an exclusive dashboard who saves all your credentials in an encoded format, upgrade them at any moment & keep in your project environment clean while avoiding to hard-code secrets.
 
 ## What is KeyForge?
 
-Most of the developers keep API keys in `.env` files, config files, or scattered notes. That works for a small project, but it gets messy as the project grows. So, KeyForge gives you a single place to manage credentials with a clean interface and strong encryption at rest.
 
-Easch User has their own vault, and every saved secret is encrypted before it is stored in the database using Python's `cryptography.fernet` library.
+Human output
+History
+Help
+Settings
+What is KeyForge?
+
+Nearly all developers store their API keys in one or all of: environment variables, configuration files, loose scribbles. That is okay for a tiny project, but quickly becomes jarring when the project hits a few dozen lines. KeyForge offers one single location for all your credentials with a beautiful interface and in-database encryption.
+
+Each User has the own vault, and whenever a secret is saved, it is encrypted onto the data base using Python's cryptography. Fernet.
 
 ## How it works?
 
 1. Create an account and login.
 2. Open your personal vault dashboard.
-3. Add a key with a name, provider and secret value.
+3. Add a key with a name, provider, and secret value.
 4. KeyForge encrypts the value before saving it.
 5. Update, delete, or manage keys from the same vault/dashboard.
 
 ## Features
 
-- User authentication and account management
+- User authentication and management of user accounts.
 - Per user vaults with separate data
 - Encrypted API key storage using Fernet
 - Add, update and delete credentials
